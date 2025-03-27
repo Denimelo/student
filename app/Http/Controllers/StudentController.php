@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Flight;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -11,7 +13,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('students.index');
+        $students = Student::all();
+        return view('students.index', compact('students'));
     }
 
     /**
@@ -27,7 +30,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'birth_date' => 'required|string|max:255',
+            'gender' => 'required|in:homme,femme',
+            'phone' => 'required|string|max:20'
+        ]);
+
+        Student::create($validatedData);
+
+        return redirect()->route('students.index')
+            ->with('success', 'Étudiant ajouté avec succès.');
+
     }
 
     /**
@@ -35,7 +50,8 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $student = Student::find($id);
+        return view('students.show', compact('student'));
     }
 
     /**
@@ -43,15 +59,29 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $student = Student::findOrFail($id);
+        return view('students.edit', compact('student'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $student = Student::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'birth_date' => 'required|string|max:255',
+            'gender' => 'required|in:homme,femme',
+            'phone' => 'required|string|max:20'
+        ]);
+
+        $student->update($validatedData);
+
+        return redirect()->route('students.index')
+            ->with('success', 'Étudiant modifié avec succès.');
     }
 
     /**
@@ -59,6 +89,10 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $student = Student::findOrFail($id);
+        $student->delete();
+
+        return redirect()->route('students.index')
+            ->with('success', 'Étudiant supprimé avec succès.');
     }
 }

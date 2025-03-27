@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Création d'un Étudiant</title>
+    <title>Édition d'un Étudiant</title>
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -111,37 +111,38 @@
                 <i class="fas fa-graduation-cap me-2"></i>
                 <span>Gestion des Étudiants</span>
             </a>
-            <h2 class="text-white m-0 ms-auto fs-4">Formulaire d'Inscription</h2>
+            <h2 class="text-white m-0 ms-auto fs-4">Modifier un Étudiant</h2>
         </div>
     </nav>
 
     <div class="container">
         <div class="form-container">
-            <h3 class="section-title">Ajouter un nouvel étudiant</h3>
+            <h3 class="section-title">Modifier les informations de l'étudiant</h3>
             
-            <form method="POST" action="{{ route('students.store') }}">
+            <form method="POST" action="{{ route('students.update', $student->id) }}">
                 @csrf
+                @method('PUT')
+
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom</label>
-                    <input type="text" id="nom" name="last_name" class="form-control" placeholder="Entrez le nom de l'étudiant" required>
+                    <input type="text" id="nom" name="last_name" class="form-control" value="{{ $student->last_name }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="prenom" class="form-label">Prénom</label>
-                    <input type="text" id="prenom" name="first_name" class="form-control" placeholder="Entrez le prénom de l'étudiant" required>
+                    <input type="text" id="prenom" name="first_name" class="form-control" value="{{ $student->first_name }}" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="date_naissance">Date de naissance :</label>
-                    <input type="date" id="date_naissance" name="birth_date" class="form-control" placeholder="Entrez le nom de l'étudiant" required>
+                    <label for="date_naissance" class="form-label">Date de naissance</label>
+                    <input type="date" id="date_naissance" name="birth_date" class="form-control" value="{{ $student->birth_date }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="sexe" class="form-label">Sexe</label>
                     <select id="sexe" name="gender" class="form-select" required>
-                        <option value="" selected disabled>Sélectionnez une option</option>
-                        <option value="homme">Homme</option>
-                        <option value="femme">Femme</option>
+                        <option value="homme" {{ $student->gender == 'homme' ? 'selected' : '' }}>Homme</option>
+                        <option value="femme" {{ $student->gender == 'femme' ? 'selected' : '' }}>Femme</option>
                     </select>
                 </div>
 
@@ -149,7 +150,7 @@
                     <label for="tel" class="form-label">Téléphone</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                        <input type="tel" id="telephone" name="phone" class="form-control" placeholder="Ex: 06 12 34 56 78" required>
+                        <input type="tel" id="telephone" name="phone" class="form-control" value="{{ $student->phone }}" required>
                     </div>
                 </div>
 
@@ -158,7 +159,7 @@
                         <i class="fas fa-arrow-left me-2"></i> Retour
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i> Enregistrer
+                        <i class="fas fa-save me-2"></i> Mettre à jour
                     </button>
                 </div>
             </form>
